@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import HomePage from './main/HomePage';
 import ProductDetailPage from './main/ProductDetailPage';
 import CartPage from './main/CartPage';
+import 'index.css';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -26,5 +27,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;
