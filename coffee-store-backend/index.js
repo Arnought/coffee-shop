@@ -10,7 +10,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-const products = require('./data/products');
+const products = require('./data/product');
 
 // Get all products
 app.get('/products', (req, res) => {

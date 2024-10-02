@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductItem from './ProductionItem';
+import ProductItem from './ProductItem';
 
 const ProductList = ({ products }) => (
   <div className="product-list">
