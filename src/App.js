@@ -1,32 +1,109 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HomePage from './main/HomePage';
-import ProductDetailPage from './main/ProductDetailPage';
-import CartPage from './main/CartPage';
-import 'index.css';
+import React, { useState, useEffect } from 'react';
 
-function App() {
-  const [cartItems, setCartItems] = useState([]);
-  const products = [
-    { id: 1, name: 'Espresso', price: 5, description: 'Rich and bold espresso', image: 'espresso.jpg' },
-    { id: 2, name: 'Cappuccino', price: 6, description: 'Creamy cappuccino', image: 'cappuccino.jpg' },
-    // Add more products as needed
-  ];
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import Navbar from './components/Navbar';
+
+import HomePage from './main/HomePage';
+
+import CartPage from './main/CartPage';
+
+const App = () => {
+
+  const [cart, setCart] = useState([]);
+
+  // Fetch cart from backend on initial load
+
+  useEffect(() => {
+
+    const fetchCart = async () => {
+
+      const response = await fetch('http://localhost:5000/api/cart');
+
+      const data = await response.json();
+
+      setCart(data);
+
+    };
+
+    fetchCart();
+
+  }, []);
+
+  const addToCart = async (product) => {
+
+    try {
+
+      const response = await fetch('http://localhost:5000/api/cart/add', {
+
+        method: 'POST',
+
+        headers: { 'Content-Type': 'application/json' },
+
+        body: JSON.stringify({ productId: product._id }), // Ensure you're sending the correct productId
+
+      });
+
+      
+
+      if (!response.ok) {
+
+        throw new Error('Failed to add item to cart');
+
+      }
+
+  
+
+      const data = await response.json();
+
+      setCart(data); // Update the cart state with the response from the backend
+
+    } catch (error) {
+
+      console.error('Error adding to cart:', error);
+
+    }
+
+  };
+
+  
+
+  const removeFromCart = async (productId) => {
+
+    const response = await fetch('http://localhost:5000/api/cart/remove', {
+
+      method: 'POST',
+
+      headers: { 'Content-Type': 'application/json' },
+
+      body: JSON.stringify({ productId }),
+
+    });
+
+    const data = await response.json();
+
+    setCart(data);
+
+  };
 
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<HomePage products={products} />} />
-        <Route path="/product/:id" element={<ProductDetailPage products={products} />} />
-        <Route path="/cart" element={<CartPage cartItems={cartItems} />} />
-      </Routes>
-      <Footer />
-    </Router>
-  );
-}
 
+    <Router>
+
+      <Navbar />
+
+      <Routes>
+
+        <Route path="/" element={<HomePage addToCart={addToCart} />} />
+
+        <Route path="/cart" element={<CartPage cart={cart} removeFromCart={removeFromCart} />} />
+
+      </Routes>
+
+    </Router>
+
+  );
+
+};
 
 export default App;

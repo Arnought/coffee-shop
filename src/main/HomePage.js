@@ -1,22 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import ProductList from '../components/ProductList';
+import React, { useEffect, useState } from 'react';
 
-const HomePage = () => {
+import ProductCard from '../components/ProductCard';
+
+const HomePage = ({ addToCart }) => {
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/products')  // Connect to backend API
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
+
+    const fetchProducts = async () => {
+
+      const response = await fetch('http://localhost:5000/api/products');
+
+      const data = await response.json();
+
+      setProducts(data);
+
+    };
+
+    fetchProducts();
+
   }, []);
 
   return (
-    <div>
-      <h2>Welcome to Coffee Shop</h2>
-      <ProductList products={products} />
+
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+
+      {products.map(product => (
+
+        <ProductCard key={product._id} product={product} addToCart={addToCart} />
+
+      ))}
+
     </div>
+
   );
+
 };
 
 export default HomePage;

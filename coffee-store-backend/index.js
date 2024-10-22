@@ -1,29 +1,43 @@
 const express = require('express');
+
+const mongoose = require('mongoose');
+
 const cors = require('cors');
+
+const productRoutes = require('./routes/productRoutes');
+
+const cartRoutes = require('./routes/cartRoutes');
+
 const app = express();
-const PORT = 5000;
+
+// Middleware
 
 app.use(cors());
-app.use(express.json()); // To handle JSON data
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.use(express.json());
 
-const products = require('./data/product');
+// Routes
 
-// Get all products
-app.get('/products', (req, res) => {
-    res.json(products);
+app.use('/api/products', productRoutes);
+
+app.use('/api/cart', cartRoutes);
+
+// MongoDB Connection
+
+mongoose.connect('mongodb://localhost:27017/coffee-store', {
+
+  useNewUrlParser: true,
+
+  useUnifiedTopology: true,
+
+}).then(() => {
+
+  console.log('Connected to MongoDB');
+
+  app.listen(5000, () => {
+
+    console.log('Server running on port 5000');
+
   });
-  
-  // Get a specific product by ID
-  app.get('/products/:id', (req, res) => {
-    const productId = parseInt(req.params.id);
-    const product = products.find(p => p.id === productId);
-  
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.json(product);
-  });
+
+}).catch(err => console.log(err));
