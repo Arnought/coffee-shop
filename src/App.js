@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Navbar from './components/Navbar';
+import Navbar from '../frontend/components/Navbar';
 
-import HomePage from './main/HomePage';
+import HomePage from '../frontend/main/HomePage';
 
-import CartPage from './main/CartPage';
+import CartPage from '../frontend/main/CartPage';
 
 const App = () => {
 
